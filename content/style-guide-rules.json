@@ -1,7 +1,7 @@
 {
   "_howto": "One object per rule. Keep each rule to one idea. Ids use CATEGORY-NN so the model can cite them. A parent name (Alert) covers its parts (AlertTitle, AlertDescription). If a rule lists components and message types, both must match.",
   "version": "0.1",
-  "components": ["Button", "Badge", "Field", "FieldError", "FieldLabel", "FieldDescription", "Label", "Card", "Dialog", "DialogTitle", "Alert", "AlertTitle", "AlertDescription", "Toast", "ToastTitle", "ToastDescription", "CardTitle", "DialogDescription", "ProgressLabel", "EmptyTitle", "EmptyDescription", "Link", "PageTitle", "PageDescription"],
+  "components": ["Alert", "AlertDescription", "AlertTitle", "Badge", "Button", "Card", "CardTitle", "Dialog", "DialogDescription", "DialogTitle", "EmptyDescription", "EmptyTitle", "Field", "FieldDescription", "FieldError", "FieldLabel", "Label", "Link", "PageDescription", "PageTitle", "ProgressLabel", "Toast", "ToastDescription", "ToastTitle"],
   "messageTypes": ["error", "warning", "success"],
   "rules": [
 
@@ -66,6 +66,15 @@
       "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
       "do": "Enter 8 or more characters. Include a number.",
       "dont": "Enter 8 or more characters include a number"
+    },
+
+    {
+      "id": "DESCRIPTIONS-03",
+      "category": "Secondary Descriptions",
+      "rule": "Don't use punctation for descriptions that describe the state of the field, like required and optional.",
+      "appliesTo": ["FieldDescription"],
+      "do": "Optional",
+      "dont": "Optional."
     },
 
     {

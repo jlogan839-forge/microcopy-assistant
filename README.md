@@ -37,9 +37,9 @@ the product; the app is just a way to use them.
 - [x] Run it locally and see the starter page
 
 ### Phase 4 — Talk to Claude
-- [ ] Get an Anthropic API key, store it in `web/.env.local`
-- [ ] Build an API route that sends rules + input text to Claude
-- [ ] Return JSON that matches `content/output-schema.json`
+- [x] Get an Anthropic API key, store it in `web/.env.local`
+- [x] Build an API route that sends rules + input text to Claude
+- [x] Return JSON that matches `content/output-schema.json`
 
 ### Phase 5 — Interface
 - [ ] Input: textarea, component type, character limit
