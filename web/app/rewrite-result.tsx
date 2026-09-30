@@ -56,7 +56,7 @@ export function RewriteResultView({ result }: { result: RewriteResult }) {
             </AlertDescription>
           </Alert>
         ) : (
-          <Alert>
+          <Alert variant="success">
             <CircleCheckIcon />
             <AlertTitle>Follows the style guide</AlertTitle>
             <AlertDescription>No changes needed.</AlertDescription>
@@ -107,7 +107,7 @@ export function RewriteResultView({ result }: { result: RewriteResult }) {
       )}
 
       {result.flags.length > 0 && (
-        <Alert>
+        <Alert variant="warning">
           <TriangleAlertIcon />
           <AlertTitle>Needs more information</AlertTitle>
           <AlertDescription>
