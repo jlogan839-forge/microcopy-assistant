@@ -1,0 +1,31 @@
+id,component,messageType,char_limit,original,ideal_rewrite,expected_rules,expected_flags,notes
+T01,Button,,,Save Changes,Save,BUTTONS-01,,
+T02,FieldError,error,,Invalid input! You entered a duplicate email.,Enter a different email. That email is already in use.,"ERR-01, ERR-02",,
+T04,FieldError,,,Enter your SSN your data won't be stored,Enter your SSN. Your data won't be stored.,DESCRIPTIONS-01,,
+T05,AlertTitle,error,,Failed to upload files,Try uploading again,ERR-01,cause unknown for why upload failed,
+T06,DialogTitle,warning,,Do you want to cancel this order?,Cancel order?,DIALOG-01,,
+T07,PageTitle,,,Projects Dashboard,Projects,"CAPS-01, PAGE-01",,Dashboard is dropped because it is overtly obvious and doesn't add more value to a PageTitle
+T08,ProgressLabel,,,Your materials are being picked.,Picking materials,"PROGRESS-01, PUNCTUATION-01",,
+T09,EmptyTitle,,,This page is empty until you add contacts or import.,Add contacts or import your contact list,"EMPTY-01, PUNCTUATION-01",,
+T10,AlertTitle,error,,You can't update a locked field,Couldn't update locked field,"ERR-03, ERR-02",,
+T11,Button,,,Click Here To Submit Your Application,Submit,"BUTTONS-01, CAPS-01",,
+T12,Button,,,Proceed to the next step.,Next,"BUTTONS-01, PUNCTUATION-01",,
+T13,AlertDescription,,,This report is now available for download.,Download the report.,TONE-01,,Tests TONE-01 via the parent name Alert
+T14,DialogDescription,,,This dialog lets you rename the file.,Enter a new name for the file.,TONE-01,,Tests TONE-01 via the parent name Dialog
+T15,FieldDescription,,,Enter a valid URL.,Enter a valid web address.,TONE-02,,
+T16,Button,,,Execute Query,Run,"TONE-02, CAPS-01, BUTTONS-01",,
+T17,ToastTitle,success,,Your changes have been successfully saved to the server,Changes saved,TOASTS-01,,
+T18,ToastTitle,success,,Project exported.,Project exported,PUNCTUATION-01,,
+T19,Toast,error,,Something went wrong,AlertTitle: Something went wrong,TOASTS-02,cause and next step unknown,
+T20,Toast,error,,Payment failed. Your card was declined.,AlertTitle: Use a different card / AlertDescription: Your card was declined.,"TOASTS-02, ERR-01",,
+T21,EmptyDescription,,,You don't have any saved reports.,Your saved reports will appear here.,EMPTY-02,,
+T22,EmptyDescription,,,Nothing to show. No team members have been invited.,Team members you invite will appear here.,EMPTY-02,,
+T23,FieldDescription,,,Enter your date of birth,Enter your date of birth.,DESCRIPTIONS-01,consider saying why date of birth is needed (DESCRIPTIONS-02),
+T24,AlertDescription,warning,,Deleting this workspace removes all projects,Deleting this workspace removes all projects.,DESCRIPTIONS-01,consider saying whether this can be undone (DESCRIPTIONS-02),
+T25,Button,,,Save,Save,,,
+T26,DialogTitle,warning,,Delete project?,Delete project?,,,Already correct
+T27,ProgressLabel,,,Uploading files,Uploading files,,,Already correct
+T28,FieldError,error,,Enter a valid email address.,Enter a valid email address.,,,Already correct
+T29,FieldError,error,,Invalid value,Enter a valid value.,"ERR-01, DESCRIPTIONS-01",what makes a value valid is unknown,
+T30,AlertTitle,error,,Access Denied: You Don't Have Permission To View This Page!,Couldn't access this page,"ERR-03, CAPS-01, PUNCTUATION-01",,Tests ERR-03 overriding ERR-01
+T31,DialogTitle,warning,,Are you sure you want to delete?,,,object unknown,don't rewrite

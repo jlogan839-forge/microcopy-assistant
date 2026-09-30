@@ -1,0 +1,25 @@
+{
+  "_howto": "The shape Claude must return. Draft — revisit in Phase 4.",
+  "type": "object",
+  "properties": {
+    "original": { "type": "string" },
+    "rewrites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "rulesApplied": { "type": "array", "items": { "type": "string" } },
+          "rationale": { "type": "string" }
+        },
+        "required": ["text", "rulesApplied", "rationale"]
+      }
+    },
+    "flags": {
+      "description": "Problems the model can't fix without more context, e.g. missing recovery step.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["original", "rewrites", "flags"]
+}

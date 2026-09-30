@@ -1,0 +1,161 @@
+{
+  "_howto": "One object per rule. Keep each rule to one idea. Ids use CATEGORY-NN so the model can cite them. A parent name (Alert) covers its parts (AlertTitle, AlertDescription). If a rule lists components and message types, both must match.",
+  "version": "0.1",
+  "components": ["Button", "Badge", "Field", "FieldError", "FieldLabel", "FieldDescription", "Label", "Card", "Dialog", "DialogTitle", "Alert", "AlertTitle", "AlertDescription", "Toast", "ToastTitle", "ToastDescription", "CardTitle", "DialogDescription", "ProgressLabel", "EmptyTitle", "EmptyDescription", "Link", "PageTitle", "PageDescription"],
+  "messageTypes": ["error", "warning", "success"],
+  "rules": [
+
+
+    {
+      "id": "TONE-01",
+      "category": "Language and tone",
+      "rule": "Keep all text as action-oriented unless supplemental information is required to help the user move to the next step or to provide reassurance.",
+      "appliesTo": ["Button", "Label", "Dialog", "Alert", "Card", "Toast"],
+      "do": "Enter your SSN.",
+      "dont": "This field is for your SSN."
+    },
+
+    {
+      "id": "TONE-02",
+      "category": "Language and tone",
+      "rule": "Use plain language without jargon.",
+      "appliesTo": ["*"],
+      "do": "Clear browsing data and try again",
+      "dont": "Request header fields are too large."
+    },
+    {
+      "id": "PUNCTUATION-01",
+      "category": "Language and tone",
+      "rule": "Don't include punctuation on headings, toasts, badges, buttons.",
+      "appliesTo": ["Button", "Label", "ToastTitle", "CardTitle", "AlertTitle", "ProgressLabel", "EmptyTitle", "PageTitle", "Badge"],
+      "do": "Maximum columns",
+      "dont": "Max columns."
+    },
+
+    {
+      "id": "CAPS-01",
+      "category": "Capitalization",
+      "rule": "Use sentence case for buttons, labels, and headings.",
+      "appliesTo": ["Button", "Label", "DialogTitle", "CardTitle", "AlertTitle", "ProgressLabel", "EmptyTitle", "PageTitle"],
+      "do": "Import project",
+      "dont": "Import Project"
+    },
+
+    {
+      "id": "PAGE-01",
+      "category": "Page Titles",
+      "rule": "Don't include words that describe the page type, like Dashboard, Page, or Screen. Name the page by its content.",
+      "appliesTo": ["PageTitle"],
+      "do": "Projects",
+      "dont": "Projects dashboard"
+    },
+
+    {
+      "id": "BUTTONS-01",
+      "category": "Button Labels",
+      "rule": "Label buttons with the action and keep it short.",
+      "appliesTo": ["Button"],
+      "do": "Save",
+      "dont": "Save Changes"
+    },
+
+    {
+      "id": "DESCRIPTIONS-01",
+      "category": "Secondary Descriptions",
+      "rule": "Use sentences for all secondary text with punctuation.",
+      "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
+      "do": "Enter 8 or more characters. Include a number.",
+      "dont": "Enter 8 or more characters include a number"
+    },
+
+    {
+      "id": "DESCRIPTIONS-02",
+      "category": "Secondary Descriptions",
+      "rule": "Add supplemental information only when it's important to reassure the user about sensitive information or what's going to happen next. If the original doesn't include this information, flag that it's missing instead of writing it.",
+      "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
+      "do": "Enter your SSN. Your data won't be stored. /Flag: Consider saying how SSN data is used",
+      "dont": "Enter your SSN your data won't be stored"
+    },
+
+
+    {
+      "id": "TOASTS-01",
+      "category": "Toast Messages",
+      "rule": "Keep toast messages concise with 5 words or fewer.",
+      "appliesTo": ["ToastTitle"],
+      "do": "Importing project",
+      "dont": "Importing project from Excel spreadsheet"
+    },
+
+    {
+      "id": "TOASTS-02",
+      "category": "Toast Message Errors",
+      "rule": "Error toast messages should be converted to Alerts with AlertTitle and AlertDescription.",
+      "appliesTo": ["Toast", "error"],
+      "suggestedComponent": "Alert",
+      "do": "AlertTitle: Upload files with type PNG, JPEG, or PDF",
+      "dont": "Toast: Failed to upload files"
+    },
+    {
+      "id": "DIALOG-01",
+      "category": "Dialog Warnings",
+      "rule": "Warning dialog titles should be in the form of a question, action followed by the object. Question marks are allowed.",
+      "appliesTo": ["DialogTitle", "warning"],
+      "do": "Discard changes?",
+      "dont": "You're discarding your changes, confirm to continue."
+    },
+
+    {
+      "id": "ERR-01",
+      "category": "Errors",
+      "rule": "Start with a verb to be action-oriented on what the user can do to solve the error.",
+      "appliesTo": ["error", "FieldError"],
+      "do": "Enter a different email. This email is already in use.",
+      "dont": "Invalid input! You entered a duplicate email."
+    },
+
+    {
+      "id": "ERR-02",
+      "category": "Errors",
+      "rule": "Don't blame the user in error scenarios",
+      "appliesTo": ["error", "FieldError", "DialogTitle", "DialogDescription", "AlertTitle", "AlertDescription", "Toast"],
+      "do": "Upload a file type of PNG, JPEG, or PDF",
+      "dont": "You entered the wrong file type."
+    },
+
+    {
+      "id": "ERR-03",
+      "category": "Errors",
+      "rule": "If the user isn't allowed to solve the issue, start with the word Couldn't followed by the incomplete action for the primary text. For the secondary text, tell the user to please contact a system administrator for help, if that is what applies. This overrides ERR-01",
+      "appliesTo": ["error"],
+      "do": "Title: Couldn't access that page / Description: Please contact your system administrator for permissions.",
+      "dont": "Invalid input! You can't get in."
+    },
+
+    {
+      "id": "PROGRESS-01",
+      "category": "Progress",
+      "rule": "Start progress messages with the gerund form of the action verb.",
+      "appliesTo": ["ProgressLabel"],
+      "do": "Uploading files",
+      "dont": "The files are being uploaded"
+    },
+
+    {
+      "id": "EMPTY-01",
+      "category": "Empty State",
+      "rule": "Empty state titles should start with an action verb encouraging users to do something to fill the empty state.",
+      "appliesTo": ["EmptyTitle"],
+      "do": "Create a project",
+      "dont": "No projects yet"
+    },
+    {
+      "id": "EMPTY-02",
+      "category": "Empty State",
+      "rule": "Focus on the purpose of the empty state without negative wording to the user.",
+      "appliesTo": ["EmptyDescription"],
+      "do": "Create or import a project to get started.",
+      "dont": "You haven't created any projects yet."
+    }
+  ]
+}
