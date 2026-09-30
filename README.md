@@ -48,3 +48,10 @@ the product; the app is just a way to use them.
 ### Phase 6 — Evaluate & ship
 - [ ] Run the test set, compare to your ideal rewrites, tune the prompt
 - [ ] Deploy to Vercel, link from your portfolio
+
+### Phase 7 — Rewrite library
+- [ ] Save button on each rewrite card (stored in the browser with `localStorage`)
+- [ ] Library page: list saved rewrites with component, message type, rules, and date
+- [ ] Search and filter by component
+- [ ] Later: send relevant saved examples to Claude with each request, so the tool learns the team's style
+- [ ] Later: team library with accounts and a database
