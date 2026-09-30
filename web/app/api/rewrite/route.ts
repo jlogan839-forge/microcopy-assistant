@@ -3,6 +3,7 @@ import path from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
+import { RewriteResult } from "@/lib/rewrite-schema";
 
 const client = new Anthropic();
 const contentDir = path.join(process.cwd(), "..", "content");
@@ -14,18 +15,6 @@ const RewriteRequest = z.object({
   charLimit: z.number().int().positive().optional(),
 });
 
-const RewriteResult = z.object({
-  original: z.string(),
-  rewrites: z.array(
-    z.object({
-      text: z.string(),
-      rulesApplied: z.array(z.string()),
-      rationale: z.string(),
-    }),
-  ),
-  flags: z.array(z.string()),
-  suggestedComponent: z.string().nullable(),
-});
 
 export async function POST(request: Request) {
   const input = RewriteRequest.safeParse(await request.json());

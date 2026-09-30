@@ -13,6 +13,11 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import type { RewriteResult } from "@/lib/rewrite-schema";
+import { RewriteResultView } from "./rewrite-result";
+
+type ResultState = RewriteResult | { error: string } | null;
 
 type Props = {
   components: string[];
@@ -25,7 +30,7 @@ export function RewriteForm({ components, messageTypes }: Props) {
   const [messageType, setMessageType] = useState<string | null>(null);
   const [charLimit, setCharLimit] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<ResultState>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -115,11 +120,13 @@ export function RewriteForm({ components, messageTypes }: Props) {
         {loading ? "Checking" : "Check text"}
       </Button>
 
-      {result !== null && (
-        <pre className="overflow-auto rounded-lg bg-muted p-4 text-sm">
-          {JSON.stringify(result, null, 2)}
-        </pre>
+            {result && "error" in result && (
+        <Alert variant="destructive">
+          <AlertTitle>Couldn&rsquo;t check text</AlertTitle>
+          <AlertDescription>{result.error}</AlertDescription>
+        </Alert>
       )}
+      {result && !("error" in result) && <RewriteResultView result={result} />}
     </form>
   );
 }

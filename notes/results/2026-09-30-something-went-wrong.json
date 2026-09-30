@@ -1,0 +1,25 @@
+{
+  "original": "Something went wrong",
+  "rewrites": [
+    {
+      "text": "[Verb] [object] again",
+      "rulesApplied": [
+        "ERR-01"
+      ],
+      "rationale": "If the user can fix the problem, the title should start with a verb that tells them what to do, but the original doesn't say what failed, so placeholders show the structure."
+    },
+    {
+      "text": "Couldn't [action] [object]",
+      "rulesApplied": [
+        "ERR-03"
+      ],
+      "rationale": "If the user can't fix the problem, the title should start with Couldn't followed by the action that didn't finish, so placeholders show the structure."
+    }
+  ],
+  "flags": [
+    "The original doesn't say what failed. Add the action and object to fill the [Verb]/[action] and [object] placeholders, for example what the user was trying to save, load, or upload.",
+    "The original doesn't say whether the user can fix the problem. Use the first rewrite (ERR-01) if they can and the second (ERR-03) if they can't.",
+    "If the user can't fix the problem, ERR-03 says the AlertDescription should tell them to contact a system administrator, if that applies. The original has no description, so confirm who the user should contact."
+  ],
+  "suggestedComponent": null
+}
