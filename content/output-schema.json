@@ -1,5 +1,5 @@
 {
-  "_howto": "The shape Claude must return. Draft — revisit in Phase 4.",
+  "_howto": "The shape Claude must return.",
   "type": "object",
   "properties": {
     "original": { "type": "string" },
@@ -19,6 +19,10 @@
       "description": "Problems the model can't fix without more context, e.g. missing recovery step.",
       "type": "array",
       "items": { "type": "string" }
+    },
+     "suggestedComponent": {
+      "description": "A different component the text should use, e.g. Alert instead of an error Toast. Null when the current component is right.",
+      "type": ["string", "null"]
     }
   },
   "required": ["original", "rewrites", "flags"]

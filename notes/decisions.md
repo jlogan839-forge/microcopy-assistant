@@ -43,5 +43,7 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 - Based on refining test set, added PAGE-01 Description
 - Drops page types from page titles.
 
+## 2026-09-30 —  Number of rewrites
+- Return a max of 3 rewrites so user is not overwhelmed.
 
 

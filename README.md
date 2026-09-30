@@ -33,8 +33,8 @@ the product; the app is just a way to use them.
 
 ### Phase 3 — Scaffold the app
 - [x] Create the Next.js app in `web/` with Tailwind
-- [ ] Add shadcn/ui and the components you need
-- [ ] Run it locally and see the starter page
+- [x] Add shadcn/ui and the components you need
+- [x] Run it locally and see the starter page
 
 ### Phase 4 — Talk to Claude
 - [ ] Get an Anthropic API key, store it in `web/.env.local`
