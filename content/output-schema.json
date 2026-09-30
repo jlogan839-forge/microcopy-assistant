@@ -9,10 +9,14 @@
         "type": "object",
         "properties": {
           "text": { "type": "string" },
+          "description": {
+            "description": "Secondary text, like an alert or dialog description. Null when the component has one part.",
+            "type": ["string", "null"]
+          },
           "rulesApplied": { "type": "array", "items": { "type": "string" } },
           "rationale": { "type": "string" }
         },
-        "required": ["text", "rulesApplied", "rationale"]
+        "required": ["text", "description", "rulesApplied", "rationale"]
       }
     },
     "flags": {

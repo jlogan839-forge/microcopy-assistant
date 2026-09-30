@@ -1,6 +1,12 @@
 "use client";
 
-import { ArrowRightLeftIcon, CircleCheckIcon, CopyIcon, TriangleAlertIcon } from "lucide-react";
+import {
+  ArrowRightLeftIcon,
+  CircleCheckIcon,
+  CircleHelpIcon,
+  CopyIcon,
+  TriangleAlertIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -41,11 +47,21 @@ export function RewriteResultView({ result }: { result: RewriteResult }) {
       )}
 
       {unchanged ? (
-        <Alert>
-          <CircleCheckIcon />
-          <AlertTitle>Follows the style guide</AlertTitle>
-          <AlertDescription>No changes needed.</AlertDescription>
-        </Alert>
+        result.flags.length > 0 ? (
+          <Alert>
+            <CircleHelpIcon />
+            <AlertTitle>No rewrite yet</AlertTitle>
+            <AlertDescription>
+              Add the details listed below, then check the text again.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert>
+            <CircleCheckIcon />
+            <AlertTitle>Follows the style guide</AlertTitle>
+            <AlertDescription>No changes needed.</AlertDescription>
+          </Alert>
+        )
       ) : (
         result.rewrites.map((rewrite, index) => (
           <Card key={index}>
@@ -54,8 +70,21 @@ export function RewriteResultView({ result }: { result: RewriteResult }) {
                 {result.rewrites.length > 1 ? `Option ${index + 1}` : "Rewrite"}
               </CardDescription>
               <CardTitle className="text-lg">{rewrite.text}</CardTitle>
+              {rewrite.description && (
+                <p className="text-muted-foreground">{rewrite.description}</p>
+              )}
               <CardAction>
-                <Button variant="outline" size="sm" onClick={() => copy(rewrite.text)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    copy(
+                      rewrite.description
+                        ? `${rewrite.text}\n${rewrite.description}`
+                        : rewrite.text,
+                    )
+                  }
+                >
                   <CopyIcon />
                   Copy
                 </Button>

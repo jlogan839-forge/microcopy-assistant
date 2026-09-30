@@ -5,6 +5,7 @@ export const RewriteResult = z.object({
   rewrites: z.array(
     z.object({
       text: z.string(),
+      description: z.string().nullable(),
       rulesApplied: z.array(z.string()),
       rationale: z.string(),
     }),
