@@ -46,4 +46,5 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 ## 2026-09-30 —  Number of rewrites
 - Return a max of 3 rewrites so user is not overwhelmed.
 
-
+## 2026-09-30 —  Using placeholder suggestions
+- When a fix needs information you don't have, you may use [bracketed placeholders] to show the structure, and flag what fills them

@@ -1,0 +1,72 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import Anthropic from "@anthropic-ai/sdk";
+import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
+import { z } from "zod";
+
+const client = new Anthropic();
+const contentDir = path.join(process.cwd(), "..", "content");
+
+const RewriteRequest = z.object({
+  text: z.string().min(1),
+  component: z.string().min(1),
+  messageType: z.string().optional(),
+  charLimit: z.number().int().positive().optional(),
+});
+
+const RewriteResult = z.object({
+  original: z.string(),
+  rewrites: z.array(
+    z.object({
+      text: z.string(),
+      rulesApplied: z.array(z.string()),
+      rationale: z.string(),
+    }),
+  ),
+  flags: z.array(z.string()),
+  suggestedComponent: z.string().nullable(),
+});
+
+export async function POST(request: Request) {
+  const input = RewriteRequest.safeParse(await request.json());
+  if (!input.success) {
+    return Response.json({ error: "Send text and a component." }, { status: 400 });
+  }
+  const { text, component, messageType, charLimit } = input.data;
+
+  const [prompt, rules] = await Promise.all([
+    readFile(path.join(contentDir, "system-prompt.md"), "utf8"),
+    readFile(path.join(contentDir, "style-guide-rules.json"), "utf8"),
+  ]);
+  const system = prompt.replace("{{RULES}}", rules);
+
+  const details = [`Component: ${component}`];
+  if (messageType) details.push(`Message type: ${messageType}`);
+  if (charLimit) details.push(`Character limit: ${charLimit}`);
+  const userMessage = `${details.join("\n")}\n\n<text>\n${text}\n</text>`;
+
+  try {
+    const response = await client.beta.messages.parse({
+      model: "claude-opus-5-5",
+      max_tokens: 16000,
+      output_config: { effort: "medium", format: betaZodOutputFormat(RewriteResult) },
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      system,
+      messages: [{ role: "user", content: userMessage }],
+    });
+
+    if (response.stop_reason === "refusal") {
+      return Response.json({ error: "Claude declined to rewrite this text." }, { status: 422 });
+    }
+    if (!response.parsed_output) {
+      return Response.json({ error: "Claude's answer didn't match the expected format." }, { status: 502 });
+    }
+    return Response.json(response.parsed_output);
+  } catch (error) {
+    if (error instanceof Anthropic.APIError) {
+      return Response.json({ error: `Claude API error: ${error.message}` }, { status: 502 });
+    }
+    throw error;
+  }
+}

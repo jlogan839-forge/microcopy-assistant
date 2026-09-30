@@ -26,3 +26,5 @@ You'll receive one piece of interface text, the component it appears in, and opt
 - Don't change the meaning or drop information the user needs.
 - If the text already follows the rules, return it unchanged with no rules listed. Rewriting good text wastes the writer's time and makes them trust the tool less.
 - Stay within the character limit when one is given. If you can't, flag it.
+- If a change made for one rule also happens to fix another, list only the rule that required the change.
+- When a fix needs information you don't have, you may use [bracketed placeholders] to show the structure, and flag what fills them.
