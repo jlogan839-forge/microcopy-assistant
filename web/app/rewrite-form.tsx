@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
@@ -27,14 +27,34 @@ type PartValues = Record<string, { text: string; charLimit: string }>;
 type Props = {
   components: string[];
   messageTypes: string[];
+  needsAccessCode: boolean;
 };
 
-export function RewriteForm({ components, messageTypes }: Props) {
+const CODE_KEY = "microcopy-access-code";
+
+export function RewriteForm({ components, messageTypes, needsAccessCode }: Props) {
   const [component, setComponent] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<string | null>(null);
   const [values, setValues] = useState<PartValues>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ResultState>(null);
+  const [accessCode, setAccessCode] = useState("");
+
+  // Remember the code in this browser so reviewers only enter it once.
+  useEffect(() => {
+    try {
+      // Browser storage only exists after the page loads, so this has to run in an effect.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setAccessCode(localStorage.getItem(CODE_KEY) ?? "");
+    } catch {}
+  }, []);
+
+  function updateAccessCode(code: string) {
+    setAccessCode(code);
+    try {
+      localStorage.setItem(CODE_KEY, code);
+    } catch {}
+  }
 
   const parts = component ? partsFor(component) : [];
   const filledParts = parts
@@ -60,7 +80,7 @@ export function RewriteForm({ components, messageTypes }: Props) {
     try {
       const response = await fetch("/api/rewrite", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-access-code": accessCode },
         body: JSON.stringify({
           component,
           messageType: messageType ?? undefined,
@@ -77,6 +97,20 @@ export function RewriteForm({ components, messageTypes }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-6">
+      {needsAccessCode && (
+        <Field className="sm:max-w-xs">
+          <FieldLabel htmlFor="access-code">Access code</FieldLabel>
+          <Input
+            id="access-code"
+            type="password"
+            autoComplete="off"
+            value={accessCode}
+            onChange={(event) => updateAccessCode(event.target.value)}
+          />
+          <FieldDescription>Find the code in the case study.</FieldDescription>
+        </Field>
+      )}
+
       <div className="grid gap-6 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="component">Component</FieldLabel>
@@ -145,7 +179,7 @@ export function RewriteForm({ components, messageTypes }: Props) {
 
       <Button
         type="submit"
-        disabled={!component || filledParts.length === 0 || loading}
+        disabled={!component || filledParts.length === 0 || loading || (needsAccessCode && !accessCode)}
         className="self-start"
       >
         {loading && <Spinner />}

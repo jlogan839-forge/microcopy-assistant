@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
@@ -7,7 +8,23 @@ import { RewriteRequest, RewriteResult, type RewriteResponse } from "@/lib/rewri
 const client = new Anthropic();
 const contentDir = path.join(process.cwd(), "..", "content");
 
+// When ACCESS_CODE is set (on the live site), requests must include it, so
+// strangers can't spend the API credit. Locally it's not set, so no code is needed.
+function hasAccess(request: Request) {
+  const expected = process.env.ACCESS_CODE;
+  if (!expected) return true;
+  const given = Buffer.from(request.headers.get("x-access-code") ?? "");
+  const wanted = Buffer.from(expected);
+  return given.length === wanted.length && timingSafeEqual(given, wanted);
+}
+
 export async function POST(request: Request) {
+  if (!hasAccess(request)) {
+    return Response.json(
+      { error: "Enter the access code from the case study.", needsCode: true },
+      { status: 401 },
+    );
+  }
   const input = RewriteRequest.safeParse(await request.json());
   if (!input.success) {
     return Response.json({ error: "Choose a component and enter some text." }, { status: 400 });

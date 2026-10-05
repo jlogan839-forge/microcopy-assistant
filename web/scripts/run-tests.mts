@@ -176,7 +176,7 @@ async function runOne(row: Row): Promise<RunResult> {
   try {
     const res = await fetch(API, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-access-code": process.env.ACCESS_CODE ?? "" },
       body: JSON.stringify({ component: row.component, messageType: row.messageType || undefined, parts }),
     });
     const body = await res.json();

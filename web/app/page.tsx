@@ -18,7 +18,11 @@ export default async function Home() {
       <p className="mt-1 text-muted-foreground">
         Paste UI text to check it against the style guide.
       </p>
-      <RewriteForm components={components} messageTypes={messageTypes} />
+      <RewriteForm
+        components={components}
+        messageTypes={messageTypes}
+        needsAccessCode={Boolean(process.env.ACCESS_CODE)}
+      />
     </main>
   );
 }
