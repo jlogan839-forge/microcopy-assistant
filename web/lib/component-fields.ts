@@ -8,8 +8,8 @@ export type PartDefinition = {
 };
 
 const titleAndDescription = (prefix: string): PartDefinition[] => [
-  { name: "Title", ruleName: `${prefix}Title` },
-  { name: "Description", ruleName: `${prefix}Description` },
+  { name: "Title text", ruleName: `${prefix}Title` },
+  { name: "Description text", ruleName: `${prefix}Description` },
 ];
 
 const multiPart: Record<string, PartDefinition[]> = {
@@ -28,7 +28,7 @@ const multiPart: Record<string, PartDefinition[]> = {
 
 const singlePartLabels: Record<string, string> = {
   Badge: "Badge text",
-  Button: "Button label",
+  Button: "Button text",
   FieldError: "Error message",
   FieldLabel: "Label",
   Label: "Label",
@@ -41,8 +41,8 @@ export function partsFor(component: string): PartDefinition[] {
 
   let name = singlePartLabels[component] ?? "Text";
   if (!singlePartLabels[component]) {
-    if (component.endsWith("Title")) name = "Title";
-    else if (component.endsWith("Description")) name = "Description";
+    if (component.endsWith("Title")) name = "Title text";
+    else if (component.endsWith("Description")) name = "Description text";
   }
   return [{ name, ruleName: component }];
 }

@@ -4,7 +4,7 @@ An AI assistant that rewrites UI text against a UI text style guide and cites th
 
 ![The assistant rewriting a payment error alert, showing the new title and description, a before-and-after diff, and the style guide rules it applied](notes/screenshots/PaymentRevisionCardReadability.png)
 
-**Live demo:** [microcopy-assistant.vercel.app](https://microcopy-assistant.vercel.app/) (access code in the case study) · **Case study:** coming soon
+**Live demo:** [microcopy-assistant.vercel.app](https://microcopy-assistant.vercel.app/) (access code in the case study) · **Case study:** [jacklsnodgrass.com/microcopy-assistant.html](https://jacklsnodgrass.com/microcopy-assistant.html)
 
 ## What it does
 

@@ -20,7 +20,7 @@ You'll receive the component, optionally a message type, and one or more parts o
 - Give a one-sentence `rationale` in plain language.
 - Use `flags` for problems you can't fix without information that isn't in the text, such as a missing next step or an unknown object ("delete what?"). Describe what's missing without starting with 'Missing'.
 - When a rule says the text belongs in a different component (like an error toast that should be an alert), set `suggestedComponent` and write the rewrite for that component.
-- Return each rewrite as the full set of parts, using the same part names you received and keeping unchanged parts as they are. When you suggest a different component, use that component's part names (for an Alert: Title and Description).
+- Return each rewrite as the full set of parts, using the same part names you received and keeping unchanged parts as they are. When you suggest a different component, use that component's part names (for an Alert: Title text and Description text).
 - Don't offer an option that breaks a rule. Only offer more than one when the rules allow each of them.
 
 ## Guidelines
