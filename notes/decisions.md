@@ -214,3 +214,16 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 ## 2026-10-05 —  Phase 6 result so far
 - First full 3-run pass after tuning: 28 of 30 rows pass every run (up from 22), about $0.91.
 - Every failure so far has been one of four kinds: an outdated test, an ambiguous prompt, a genuinely ambiguous rule, or a guarantee that needs code instead of a prompt.
+
+## 2026-10-05 —  Every rewrite must cite a rule (schema, not prompt)
+- T10 once rewrote text with no rules, even with "list at least one rule" in the prompt.
+- Changed the output: when text already follows the rules, Claude returns no rewrites. Every rewrite must list at least one rule.
+- The output schema enforces this (minimum 1 rule), so a change with no reason can't happen anymore.
+- Why: a prompt makes a mistake less likely; a schema makes it impossible. Use the schema for guarantees.
+
+## 2026-10-05 —  BUTTONS-01: verb only when the object is clear
+- T16 ("Execute Query"): Claude gave "Run query"; my ideal was "Run". T01 and T11 had the same question.
+- The rule didn't say when to keep the object, so a human writer would face the same question.
+- Clarified BUTTONS-01: use just the verb when the screen makes the object clear, like Save, Submit, or Run.
+- Retested T01, T11, T16: 3 of 3 each. But Claude still often offers verb + object as a second option (e.g. "Save changes" next to "Save"); the runner passes a row if any option matches.
+- Why: clarifying the rule helps writers too; making the test lenient would only have hidden the question.

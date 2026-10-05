@@ -31,7 +31,8 @@ function sameParts(a: Part[], b: Part[]) {
 
 export function RewriteResultView({ result }: { result: RewriteResponse }) {
   const unchanged =
-    result.rewrites.length === 1 && sameParts(result.rewrites[0].parts, result.original);
+    result.rewrites.length === 0 ||
+    (result.rewrites.length === 1 && sameParts(result.rewrites[0].parts, result.original));
 
   // Match each rewritten part to the original part with the same name. If the
   // names differ (e.g. a suggested component), fall back to the same position.

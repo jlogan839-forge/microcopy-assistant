@@ -117,9 +117,10 @@ function check(row: Row, response: RewriteResponse): Check[] {
   const rewrites = response.rewrites;
   const firstText = rewrites[0]?.parts.map((p) => normalize(p.text)) ?? [];
   const unchanged =
-    rewrites.length === 1 &&
+    rewrites.length === 0 ||
+    (rewrites.length === 1 &&
     firstText.length === row.original.length &&
-    firstText.every((text, i) => text === normalize(row.original[i]));
+    firstText.every((text, i) => text === normalize(row.original[i])));
   const expectNoChange =
     row.ideal.length === 0 ||
     (row.expectedRules.length === 0 &&
@@ -258,6 +259,7 @@ function report(rows: Row[], results: RunResult[][], runs: number): string {
         lines.push(`- Error: ${run.error}`);
         return;
       }
+      if (run.response!.rewrites.length === 0) lines.push("- Claude: no changes");
       run.response!.rewrites.forEach((rewrite, r) => {
         lines.push(
           `- Claude${run.response!.rewrites.length > 1 ? ` (option ${r + 1})` : ""}: ${shown(rewrite.parts.map((p) => p.text))} — ${rewrite.rulesApplied.join(", ") || "no rules"}`,

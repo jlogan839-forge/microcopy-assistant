@@ -1,7 +1,7 @@
 {
   "_howto": "One object per rule. Keep each rule to one idea. Ids use CATEGORY-NN so the model can cite them. A parent name (Alert) covers its parts (AlertTitle, AlertDescription). If a rule lists components and message types, both must match.",
   "version": "0.1",
-  "components": ["Alert", "AlertDescription", "AlertTitle", "Badge", "Button", "Card", "CardTitle", "Dialog", "DialogDescription", "DialogTitle", "Empty", "EmptyDescription", "EmptyTitle", "Field", "FieldDescription", "FieldError", "FieldLabel", "Label", "Link", "Page", "PageDescription", "PageTitle", "ProgressLabel", "Toast", "ToastDescription", "ToastTitle"],
+  "components": ["Alert", "AlertDescription", "AlertTitle", "Badge", "Button", "Card", "CardDescription", "CardTitle", "Dialog", "DialogDescription", "DialogTitle", "Empty", "EmptyDescription", "EmptyTitle", "Field", "FieldDescription", "FieldError", "FieldLabel", "Label", "Link", "Page", "PageDescription", "PageTitle", "ProgressLabel", "Toast", "ToastDescription", "ToastTitle"],
   "messageTypes": ["error", "warning", "success"],
   "rules": [
 
@@ -62,7 +62,7 @@
     {
       "id": "BUTTONS-01",
       "category": "Button Labels",
-      "rule": "Label buttons with the action and keep it short.",
+      "rule": "Label buttons with the action and keep it short. Use just the verb when the screen makes the object clear, like Save, Submit, or Run.",
       "appliesTo": ["Button"],
       "do": "Save",
       "dont": "Save Changes"

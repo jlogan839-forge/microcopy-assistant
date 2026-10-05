@@ -30,7 +30,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "minItems": 1
           },
           "rationale": {
             "type": "string"
@@ -41,7 +42,8 @@
           "rulesApplied",
           "rationale"
         ]
-      }
+      },
+      "description": "Empty when the text already follows the rules. Every rewrite cites at least one rule."
     },
     "flags": {
       "description": "Problems the model can't fix without more context, e.g. missing recovery step.",

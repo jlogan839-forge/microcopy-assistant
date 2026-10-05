@@ -30,7 +30,9 @@ export const RewriteResult = z.object({
   rewrites: z.array(
     z.object({
       parts: z.array(Part),
-      rulesApplied: z.array(z.string()),
+      // At least one rule: a change with no reason is never allowed.
+      // When nothing needs to change, Claude returns no rewrites instead.
+      rulesApplied: z.array(z.string()).min(1),
       rationale: z.string(),
     }),
   ),
