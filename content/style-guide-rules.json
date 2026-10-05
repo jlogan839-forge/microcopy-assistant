@@ -1,7 +1,7 @@
 {
   "_howto": "One object per rule. Keep each rule to one idea. Ids use CATEGORY-NN so the model can cite them. A parent name (Alert) covers its parts (AlertTitle, AlertDescription). If a rule lists components and message types, both must match.",
   "version": "0.1",
-  "components": ["Alert", "AlertDescription", "AlertTitle", "Badge", "Button", "Card", "CardTitle", "Dialog", "DialogDescription", "DialogTitle", "EmptyDescription", "EmptyTitle", "Field", "FieldDescription", "FieldError", "FieldLabel", "Label", "Link", "PageDescription", "PageTitle", "ProgressLabel", "Toast", "ToastDescription", "ToastTitle"],
+  "components": ["Alert", "AlertDescription", "AlertTitle", "Badge", "Button", "Card", "CardTitle", "Dialog", "DialogDescription", "DialogTitle", "Empty", "EmptyDescription", "EmptyTitle", "Field", "FieldDescription", "FieldError", "FieldLabel", "Label", "Link", "Page", "PageDescription", "PageTitle", "ProgressLabel", "Toast", "ToastDescription", "ToastTitle"],
   "messageTypes": ["error", "warning", "success"],
   "rules": [
 
@@ -36,9 +36,18 @@
       "id": "CAPS-01",
       "category": "Capitalization",
       "rule": "Use sentence case for buttons, labels, and headings.",
-      "appliesTo": ["Button", "Label", "DialogTitle", "CardTitle", "AlertTitle", "ProgressLabel", "EmptyTitle", "PageTitle"],
+      "appliesTo": ["Button", "Label", "DialogTitle", "CardTitle", "AlertTitle", "ProgressLabel", "EmptyTitle", "PageTitle", "FieldLabel"],
       "do": "Import project",
       "dont": "Import Project"
+    },
+
+    {
+      "id": "CONTRACTIONS-01",
+      "category": "Contractions",
+      "rule": "Use contractions always/",
+      "appliesTo": ["Button", "Label", "DialogTitle", "CardTitle", "AlertTitle", "ProgressLabel", "EmptyTitle", "PageTitle", "FieldLabel", "FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
+      "do": "We'll use your email for application reviews.",
+      "dont": "We will use your email for application reviews."
     },
 
     {
@@ -67,16 +76,7 @@
       "do": "Enter 8 or more characters. Include a number.",
       "dont": "Enter 8 or more characters include a number"
     },
-
-    {
-      "id": "DESCRIPTIONS-03",
-      "category": "Secondary Descriptions",
-      "rule": "Don't use punctation for descriptions that describe the state of the field, like required and optional.",
-      "appliesTo": ["FieldDescription"],
-      "do": "Optional",
-      "dont": "Optional."
-    },
-
+    
     {
       "id": "DESCRIPTIONS-02",
       "category": "Secondary Descriptions",
@@ -84,6 +84,15 @@
       "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
       "do": "Enter your SSN. Your data won't be stored. /Flag: Consider saying how SSN data is used",
       "dont": "Enter your SSN your data won't be stored"
+    },
+
+    {
+      "id": "DESCRIPTIONS-03",
+      "category": "Secondary Descriptions",
+      "rule": "Don't use punctuation for descriptions that describe the state of the field, like required and optional. This overrides DESCRIPTIONS-01.",
+      "appliesTo": ["FieldDescription"],
+      "do": "Optional",
+      "dont": "Optional."
     },
 
 

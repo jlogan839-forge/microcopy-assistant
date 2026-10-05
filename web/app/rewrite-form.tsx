@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -13,11 +14,15 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { RewriteResult } from "@/lib/rewrite-schema";
+import { partsFor } from "@/lib/component-fields";
+import type { RewriteResponse } from "@/lib/rewrite-schema";
 import { RewriteResultView } from "./rewrite-result";
 
-type ResultState = RewriteResult | { error: string } | null;
+type ResultState = RewriteResponse | { error: string } | null;
+
+// Text is stored by part name, so switching between components that share
+// a part (like Alert and Dialog, which both have a Title) keeps what was typed.
+type PartValues = Record<string, { text: string; charLimit: string }>;
 
 type Props = {
   components: string[];
@@ -25,12 +30,28 @@ type Props = {
 };
 
 export function RewriteForm({ components, messageTypes }: Props) {
-  const [text, setText] = useState("");
   const [component, setComponent] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<string | null>(null);
-  const [charLimit, setCharLimit] = useState("");
+  const [values, setValues] = useState<PartValues>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ResultState>(null);
+
+  const parts = component ? partsFor(component) : [];
+  const filledParts = parts
+    .map((part) => ({
+      name: part.name,
+      component: part.ruleName,
+      text: values[part.name]?.text.trim() ?? "",
+      charLimit: Number(values[part.name]?.charLimit) || undefined,
+    }))
+    .filter((part) => part.text);
+
+  function updatePart(name: string, change: Partial<PartValues[string]>) {
+    setValues((current) => ({
+      ...current,
+      [name]: { ...(current[name] ?? { text: "", charLimit: "" }), ...change },
+    }));
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -41,10 +62,9 @@ export function RewriteForm({ components, messageTypes }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text,
           component,
           messageType: messageType ?? undefined,
-          charLimit: charLimit ? Number(charLimit) : undefined,
+          parts: filledParts,
         }),
       });
       setResult(await response.json());
@@ -57,18 +77,7 @@ export function RewriteForm({ components, messageTypes }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-6">
-      <Field>
-        <FieldLabel htmlFor="text">UI text</FieldLabel>
-        <Textarea
-          id="text"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          rows={3}
-          required
-        />
-      </Field>
-
-      <div className="grid gap-6 sm:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="component">Component</FieldLabel>
           <Select value={component} onValueChange={setComponent}>
@@ -101,26 +110,49 @@ export function RewriteForm({ components, messageTypes }: Props) {
             </SelectContent>
           </Select>
         </Field>
-
-        <Field>
-          <FieldLabel htmlFor="char-limit">Character limit</FieldLabel>
-          <Input
-            id="char-limit"
-            type="number"
-            min={1}
-            value={charLimit}
-            onChange={(event) => setCharLimit(event.target.value)}
-          />
-          <FieldDescription>Optional</FieldDescription>
-        </Field>
       </div>
 
-      <Button type="submit" disabled={!text || !component || loading} className="self-start">
+      {parts.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Choose a component to start.</p>
+      ) : (
+        parts.map((part, index) => (
+          <div key={part.name} className="grid gap-3 sm:grid-cols-[1fr_9rem]">
+            <Field>
+              <FieldLabel htmlFor={`part-${index}`}>{part.name}</FieldLabel>
+              <Textarea
+                id={`part-${index}`}
+                value={values[part.name]?.text ?? ""}
+                onChange={(event) => updatePart(part.name, { text: event.target.value })}
+                rows={2}
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor={`limit-${index}`}>
+                Max characters<span className="sr-only"> for {part.name}</span>
+              </FieldLabel>
+              <Input
+                id={`limit-${index}`}
+                type="number"
+                min={1}
+                value={values[part.name]?.charLimit ?? ""}
+                onChange={(event) => updatePart(part.name, { charLimit: event.target.value })}
+              />
+              <FieldDescription>Optional</FieldDescription>
+            </Field>
+          </div>
+        ))
+      )}
+
+      <Button
+        type="submit"
+        disabled={!component || filledParts.length === 0 || loading}
+        className="self-start"
+      >
         {loading && <Spinner />}
         {loading ? "Checking" : "Check text"}
       </Button>
 
-            {result && "error" in result && (
+      {result && "error" in result && (
         <Alert variant="destructive">
           <AlertTitle>Couldn&rsquo;t check text</AlertTitle>
           <AlertDescription>{result.error}</AlertDescription>

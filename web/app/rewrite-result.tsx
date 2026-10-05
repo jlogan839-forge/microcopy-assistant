@@ -19,11 +19,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { RewriteResult } from "@/lib/rewrite-schema";
+import type { Part, RewriteResponse } from "@/lib/rewrite-schema";
 
-export function RewriteResultView({ result }: { result: RewriteResult }) {
+function sameParts(a: Part[], b: Part[]) {
+  return (
+    a.length === b.length &&
+    a.every((part) => b.find((other) => other.name === part.name)?.text === part.text)
+  );
+}
+
+export function RewriteResultView({ result }: { result: RewriteResponse }) {
   const unchanged =
-    result.rewrites.length === 1 && result.rewrites[0].text === result.original;
+    result.rewrites.length === 1 && sameParts(result.rewrites[0].parts, result.original);
 
   async function copy(text: string) {
     try {
@@ -69,21 +76,25 @@ export function RewriteResultView({ result }: { result: RewriteResult }) {
               <CardDescription>
                 {result.rewrites.length > 1 ? `Option ${index + 1}` : "Rewrite"}
               </CardDescription>
-              <CardTitle className="text-lg">{rewrite.text}</CardTitle>
-              {rewrite.description && (
-                <p className="text-muted-foreground">{rewrite.description}</p>
+              {rewrite.parts.length === 1 ? (
+                <CardTitle className="text-lg">{rewrite.parts[0].text}</CardTitle>
+              ) : (
+                <dl className="flex flex-col gap-2">
+                  {rewrite.parts.map((part, partIndex) => (
+                    <div key={part.name}>
+                      <dt className="text-xs text-muted-foreground">{part.name}</dt>
+                      <dd className={partIndex === 0 ? "text-lg font-medium" : ""}>
+                        {part.text}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
               )}
               <CardAction>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    copy(
-                      rewrite.description
-                        ? `${rewrite.text}\n${rewrite.description}`
-                        : rewrite.text,
-                    )
-                  }
+                  onClick={() => copy(rewrite.parts.map((part) => part.text).join("\n"))}
                 >
                   <CopyIcon />
                   Copy

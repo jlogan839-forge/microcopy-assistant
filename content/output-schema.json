@@ -1,33 +1,66 @@
 {
-  "_howto": "The shape Claude must return.",
+  "_howto": "The shape Claude must return. The API route adds `original` (the parts that were sent) before returning it to the page.",
   "type": "object",
   "properties": {
-    "original": { "type": "string" },
     "rewrites": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "text": { "type": "string" },
-          "description": {
-            "description": "Secondary text, like an alert or dialog description. Null when the component has one part.",
-            "type": ["string", "null"]
+          "parts": {
+            "description": "The rewritten text, one entry per part, using the part names that were sent (e.g. Label, Help text, Error text).",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "text"
+              ]
+            }
           },
-          "rulesApplied": { "type": "array", "items": { "type": "string" } },
-          "rationale": { "type": "string" }
+          "rulesApplied": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rationale": {
+            "type": "string"
+          }
         },
-        "required": ["text", "description", "rulesApplied", "rationale"]
+        "required": [
+          "parts",
+          "rulesApplied",
+          "rationale"
+        ]
       }
     },
     "flags": {
       "description": "Problems the model can't fix without more context, e.g. missing recovery step.",
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
-     "suggestedComponent": {
+    "suggestedComponent": {
       "description": "A different component the text should use, e.g. Alert instead of an error Toast. Null when the current component is right.",
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
-  "required": ["original", "rewrites", "flags"]
+  "required": [
+    "rewrites",
+    "flags",
+    "suggestedComponent"
+  ]
 }

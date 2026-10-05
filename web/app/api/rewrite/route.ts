@@ -2,26 +2,17 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
-import { z } from "zod";
-import { RewriteResult } from "@/lib/rewrite-schema";
+import { RewriteRequest, RewriteResult, type RewriteResponse } from "@/lib/rewrite-schema";
 
 const client = new Anthropic();
 const contentDir = path.join(process.cwd(), "..", "content");
 
-const RewriteRequest = z.object({
-  text: z.string().min(1),
-  component: z.string().min(1),
-  messageType: z.string().optional(),
-  charLimit: z.number().int().positive().optional(),
-});
-
-
 export async function POST(request: Request) {
   const input = RewriteRequest.safeParse(await request.json());
   if (!input.success) {
-    return Response.json({ error: "Send text and a component." }, { status: 400 });
+    return Response.json({ error: "Choose a component and enter some text." }, { status: 400 });
   }
-  const { text, component, messageType, charLimit } = input.data;
+  const { component, messageType, parts } = input.data;
 
   const [prompt, rules] = await Promise.all([
     readFile(path.join(contentDir, "system-prompt.md"), "utf8"),
@@ -31,8 +22,11 @@ export async function POST(request: Request) {
 
   const details = [`Component: ${component}`];
   if (messageType) details.push(`Message type: ${messageType}`);
-  if (charLimit) details.push(`Character limit: ${charLimit}`);
-  const userMessage = `${details.join("\n")}\n\n<text>\n${text}\n</text>`;
+  const partBlocks = parts.map((part) => {
+    const limit = part.charLimit ? ` char_limit="${part.charLimit}"` : "";
+    return `<part name="${part.name}" component="${part.component}"${limit}>\n${part.text}\n</part>`;
+  });
+  const userMessage = `${details.join("\n")}\n\n${partBlocks.join("\n")}`;
 
   try {
     const response = await client.beta.messages.parse({
@@ -51,7 +45,11 @@ export async function POST(request: Request) {
     if (!response.parsed_output) {
       return Response.json({ error: "Claude's answer didn't match the expected format." }, { status: 502 });
     }
-    return Response.json(response.parsed_output);
+    const result: RewriteResponse = {
+      original: parts.map(({ name, text }) => ({ name, text })),
+      ...response.parsed_output,
+    };
+    return Response.json(result);
   } catch (error) {
     if (error instanceof Anthropic.APIError) {
       return Response.json({ error: `Claude API error: ${error.message}` }, { status: 502 });
