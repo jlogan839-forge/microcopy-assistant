@@ -85,7 +85,7 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 - Chose stacked cards so writers can compare options side by side, e.g. "user can fix it" vs "user can't".
 - Each card: option label, rewrite, rationale, rule badges, copy button.
 
-## 2026-09-30 —  Separate title and description fields
+## 2026-09-30 —  Separate title and description fields - SUPERSEDED by Parts
 - Claude first returned multi-part rewrites as one string: "Title: … / Description: …".
 - It displayed as one long bold line, and Copy included the labels.
 - Considered: splitting the string in the UI (fragile if Claude words the labels differently).
@@ -114,5 +114,44 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 - One run applied TOASTS-02 even though it requires the error message type.
 - To do: run each test more than once in Phase 6; consider a firmer prompt line: if a rule needs a message type and none was given, don't apply it; flag it instead.
 
-## 2026-10-05 —  Raised muted text from 4.74:1 to 7.46:1
-- AA felt too light for secondary text in practice.
+## 2026-10-05 —  Using parts instead of title + description
+- Field has three parts (label, help text, error text), and reviewing them together gives better rewrites.
+- Alerts, dialogs, toasts all have titles + description.
+
+## 2026-10-05 —  Added Empty and Page as parent components
+- So empty states and page headers get both fields, Title + Description.
+
+## 2026-10-05 —  Component selection comes first in form
+- The component type will determine what input fields are available, like Title + Description.
+- Field labels change with the component.
+
+## 2026-10-05 —  Character limit per part
+- Because a title and a description need different limits.
+
+## 2026-10-05 —  Hidden fields are kept but not sent
+- Text in hidden fields is kept but not sent, so switching components doesn't lose work.
+
+## 2026-10-05 —  Parts table lives in code, not JSON
+- The parts table lives in code (component-fields.ts), not the rules JSON.
+- It configures the form, not the style guide.
+
+## 2026-10-05 —  API returns original parts
+- The API route returns the original parts itself. 
+- Claude doesn't repeat them, which saves cost and means the original can't be altered by mistake.
+
+## 2026-10-05 —  Added CONTRACTIONS-01
+- Flagged by tool during testing that no rule covers contractions.
+
+## 2026-10-05 —  Added diff view of parts
+- Showing changes without relying on color: strikethrough for removed and underline for added, plus hidden "removed:"/"added:" text for screen readers.
+- Over 70% changed → "Rewritten from:" instead of a word-by-word diff.
+- Punctuation-only changes include the previous word, because a lone added "." was invisible.
+- Parts are compared by name, falling back to position when the component changes.
+
+## 2026-10-05 —  Card design and readability
+- Raised muted text from 4.74:1 to 7.46:1, AA felt too light for secondary text in practice.
+- The Changes section uses dark text. Grey with strikethrough was hard to read even at 4.74:1.
+- Removed the "Rewrite" label. "Option 1, 2…" appears only when there are several.
+- Unique screen-reader names for "Max characters" ("Max characters for Label").
+- Copy copies all parts, one per line.
+

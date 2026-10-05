@@ -44,7 +44,7 @@
     {
       "id": "CONTRACTIONS-01",
       "category": "Contractions",
-      "rule": "Use contractions always/",
+      "rule": "Use contractions always.",
       "appliesTo": ["Button", "Label", "DialogTitle", "CardTitle", "AlertTitle", "ProgressLabel", "EmptyTitle", "PageTitle", "FieldLabel", "FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
       "do": "We'll use your email for application reviews.",
       "dont": "We will use your email for application reviews."
