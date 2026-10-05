@@ -227,3 +227,50 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 - Clarified BUTTONS-01: use just the verb when the screen makes the object clear, like Save, Submit, or Run.
 - Retested T01, T11, T16: 3 of 3 each. But Claude still often offers verb + object as a second option (e.g. "Save changes" next to "Save"); the runner passes a row if any option matches.
 - Why: clarifying the rule helps writers too; making the test lenient would only have hidden the question.
+
+## 2026-10-05 —  An outdated prompt example overrode a new rule
+- After clarifying BUTTONS-01, Claude still offered "Save changes" next to "Save".
+- Cause: the prompt's Output section allowed several options "such as how short a button label should be", written before BUTTONS-01 settled that question.
+- Replaced the example with a choice the rules really leave open: whether the user can fix an error (ERR-01) or not (ERR-03).
+- Added: don't offer an option that breaks a rule.
+- Why: the second time today an example in the prompt changed Claude's behavior more than the instructions around it. Examples need updating when rules change.
+
+## 2026-10-05 —  Diagnostics and a retry guard
+- One run returned a rewrite with no rules, which the schema should make impossible. The server log was lost when it restarted, so the cause couldn't be traced.
+- Most likely the dev server was running an old copy of the schema. After a restart, 6 runs in a row were correct.
+- Added: every response reports which model answered; a rewrite with no rules is logged and retried once; schema mismatches get a clear error.
+- The test report now shows fallback answers and retries.
+- Why: when something that should be impossible happens, make it visible and recoverable instead of guessing.
+- Lesson: restart the dev server after changing files in `web/lib/` before running tests.
+
+## 2026-10-05 —  ERR-02: what counts as blame
+- T20: Claude sometimes changed "Your card was declined" to "This card was declined", citing ERR-02. It happened in 2 separate test runs.
+- Clarified ERR-02: say what happened, not what the user did wrong. "Your card was declined" is fine; "You entered the wrong card number" isn't.
+- T20 and T02 pass 3 of 3 afterwards.
+
+## 2026-10-05 —  Phase 6 result
+- Final full run: 29 of 30 rows pass every run, 0 fallback answers, 0 retries, about $0.85 for 90 requests. The remaining row (T20) was fixed by clarifying ERR-02.
+- Up from 22 of 30 on the first run the same day.
+
+## 2026-10-05 —  Quotes inside the rules file
+- The new ERR-02 wording used straight double quotes inside the rule, which broke the JSON.
+- The API still worked (it sends the file as text), but the home page would have failed. The production build caught it.
+- Use single quotes for examples inside rule text. Run the checker after every rules edit.
+
+## 2026-10-05 —  Deploying: rules stay outside the app
+- Considered: moving `content/` into `web/`. Kept it outside, so the rules stay separate from the interface.
+- `next.config.ts` tells the build to include `../content`, and Vercel includes files outside the root directory in the build.
+- Checked with a local production build before deploying.
+
+## 2026-10-05 —  Protecting the API credit on the live site
+- Anyone with the link could otherwise use the tool, charged to my account.
+- An access code is required on the live site only (set in Vercel); locally no code is needed. The code is remembered in the browser so reviewers enter it once.
+- A monthly spend limit in the Claude Console caps the worst case.
+- A separate API key for the live site, so it can be replaced without affecting local development, and its usage shows on its own.
+- Checked on the live site: requests with no code or a wrong code are rejected before reaching Claude.
+
+## 2026-10-05 —  Public repository
+- The repository is public so people can read the rules, decision log, and test reports.
+- The README is written for visitors; the build roadmap moved to `notes/roadmap.md`.
+- Checked every screenshot before publishing. One showed my email on another site's sign-in page, so it's excluded with `.gitignore`.
+- Checked the git history: no API key was ever committed.

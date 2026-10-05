@@ -42,12 +42,13 @@ the product; the app is just a way to use them.
 - [x] Return JSON that matches `content/output-schema.json`
 
 ### Phase 5 — Interface
-- [ ] Input: textarea, component type, character limit
-- [ ] Output: rewrite options, before/after diff, rule badges, copy button
+- [x] Input: textarea, component type, character limit
+- [x] Output: rewrite options, before/after diff, rule badges, copy button
 
 ### Phase 6 — Evaluate & ship
-- [ ] Run the test set, compare to your ideal rewrites, tune the prompt
-- [ ] Deploy to Vercel, link from your portfolio
+- [x] Run the test set, compare to your ideal rewrites, tune the prompt
+- [x] Deploy to Vercel: https://microcopy-assistant.vercel.app/
+- [ ] Link from your portfolio and write the case study
 
 ### Phase 7 — Rewrite library
 - [ ] Save button on each rewrite card (stored in the browser with `localStorage`)
