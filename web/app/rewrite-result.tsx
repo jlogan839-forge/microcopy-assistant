@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Part, RewriteResponse } from "@/lib/rewrite-schema";
+import { DiffView } from "./diff-view";
 
 function sameParts(a: Part[], b: Part[]) {
   return (
@@ -31,6 +32,13 @@ function sameParts(a: Part[], b: Part[]) {
 export function RewriteResultView({ result }: { result: RewriteResponse }) {
   const unchanged =
     result.rewrites.length === 1 && sameParts(result.rewrites[0].parts, result.original);
+
+  // Match each rewritten part to the original part with the same name. If the
+  // names differ (e.g. a suggested component), fall back to the same position.
+  function originalFor(name: string, index: number) {
+    const byName = result.original.find((part) => part.name === name);
+    return byName?.text ?? result.original[index]?.text ?? "";
+  }
 
   async function copy(text: string) {
     try {
@@ -73,9 +81,9 @@ export function RewriteResultView({ result }: { result: RewriteResponse }) {
         result.rewrites.map((rewrite, index) => (
           <Card key={index}>
             <CardHeader>
-              <CardDescription>
-                {result.rewrites.length > 1 ? `Option ${index + 1}` : "Rewrite"}
-              </CardDescription>
+              {result.rewrites.length > 1 && (
+                <CardDescription>Option {index + 1}</CardDescription>
+              )}
               {rewrite.parts.length === 1 ? (
                 <CardTitle className="text-lg">{rewrite.parts[0].text}</CardTitle>
               ) : (
@@ -102,6 +110,23 @@ export function RewriteResultView({ result }: { result: RewriteResponse }) {
               </CardAction>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
+              <div className="text-sm">
+                <p className="mb-1 text-xs font-medium">Changes</p>
+                {rewrite.parts.length === 1 ? (
+                  <DiffView before={originalFor(rewrite.parts[0].name, 0)} after={rewrite.parts[0].text} />
+                ) : (
+                  <dl className="flex flex-col gap-1">
+                    {rewrite.parts.map((part, partIndex) => (
+                      <div key={part.name}>
+                        <dt className="inline font-medium">{part.name}: </dt>
+                        <dd className="inline">
+                          <DiffView before={originalFor(part.name, partIndex)} after={part.text} />
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">{rewrite.rationale}</p>
               {rewrite.rulesApplied.length > 0 && (
                 <ul aria-label="Rules applied" className="flex flex-wrap gap-2">

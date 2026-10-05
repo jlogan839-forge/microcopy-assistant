@@ -113,3 +113,6 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 - "Something went wrong" + Toast + no message type gave two different results on two runs.
 - One run applied TOASTS-02 even though it requires the error message type.
 - To do: run each test more than once in Phase 6; consider a firmer prompt line: if a rule needs a message type and none was given, don't apply it; flag it instead.
+
+## 2026-10-05 —  Raised muted text from 4.74:1 to 7.46:1
+- AA felt too light for secondary text in practice.
