@@ -230,6 +230,7 @@ function report(rows: Row[], results: RunResult[][], runs: number): string {
     `- **Pass every run:** ${stable}`,
     `- **Pass some runs (inconsistent):** ${flaky}`,
     `- **Fail every run:** ${failing}`,
+    `- **Fallback answers:** ${allRuns.filter((run) => run.response?.usage && run.response.usage.model !== "claude-opus-5-5").length} · **Retries:** ${allRuns.filter((run) => run.response?.usage?.retried).length}`,
     "",
     "| Row | Component | Result | Failed checks |",
     "|---|---|---|---|",
@@ -259,6 +260,9 @@ function report(rows: Row[], results: RunResult[][], runs: number): string {
         lines.push(`- Error: ${run.error}`);
         return;
       }
+      const usage = run.response!.usage;
+      if (usage && usage.model !== "claude-opus-5-5") lines.push(`- ⚠ Answered by fallback model: ${usage.model}`);
+      if (usage?.retried) lines.push("- ⚠ First answer had a rewrite with no rules; retried");
       if (run.response!.rewrites.length === 0) lines.push("- Claude: no changes");
       run.response!.rewrites.forEach((rewrite, r) => {
         lines.push(

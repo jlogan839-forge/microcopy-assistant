@@ -15,7 +15,7 @@ You'll receive the component, optionally a message type, and one or more parts o
 4. If every part already follows its rules, return an empty `rewrites` list.
 
 ## Output
-- Return one rewrite in most cases. Offer up to three only when there's a real choice the writer should make, such as how short a button label should be.
+- Return one rewrite in most cases. Offer up to three only when there's a real choice the writer should make, such as whether the user can fix an error themselves (ERR-01) or not (ERR-03).
 - For each rewrite, list in `rulesApplied` only the rules that caused a change. People read this list to understand why the text changed, so rules that didn't change anything make the explanation noisy.
 - Give a one-sentence `rationale` in plain language.
 - Use `flags` for problems you can't fix without information that isn't in the text, such as a missing next step or an unknown object ("delete what?"). Describe what's missing without starting with 'Missing'.

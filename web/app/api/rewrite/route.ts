@@ -28,8 +28,8 @@ export async function POST(request: Request) {
   });
   const userMessage = `${details.join("\n")}\n\n${partBlocks.join("\n")}`;
 
-  try {
-    const response = await client.beta.messages.parse({
+  const ask = () =>
+    client.beta.messages.parse({
       model: "claude-opus-5-5",
       max_tokens: 16000,
       output_config: { effort: "medium", format: betaZodOutputFormat(RewriteResult) },
@@ -40,6 +40,32 @@ export async function POST(request: Request) {
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: userMessage }],
     });
+
+  try {
+    let response = await ask();
+    let retried = false;
+
+    // The schema requires at least one rule per rewrite, so this shouldn't
+    // happen. If it does, log what we know and ask once more, so a writer
+    // never sees a change with no reason.
+    const unexplained = (output: typeof response.parsed_output) =>
+      output?.rewrites.some((rewrite) => rewrite.rulesApplied.length === 0) ?? false;
+    if (unexplained(response.parsed_output)) {
+      console.warn("Rewrite with no rules; retrying once.", {
+        id: response.id,
+        model: response.model,
+        stopReason: response.stop_reason,
+        component,
+      });
+      response = await ask();
+      retried = true;
+      if (unexplained(response.parsed_output)) {
+        return Response.json(
+          { error: "Claude's rewrite didn't say which rules it applied. Try again." },
+          { status: 502 },
+        );
+      }
+    }
 
     if (response.stop_reason === "refusal") {
       return Response.json({ error: "Claude declined to rewrite this text." }, { status: 422 });
@@ -55,12 +81,19 @@ export async function POST(request: Request) {
         cacheRead: response.usage.cache_read_input_tokens ?? 0,
         cacheWrite: response.usage.cache_creation_input_tokens ?? 0,
         output: response.usage.output_tokens,
+        model: response.model,
+        retried,
       },
     };
     return Response.json(result);
   } catch (error) {
     if (error instanceof Anthropic.APIError) {
       return Response.json({ error: `Claude API error: ${error.message}` }, { status: 502 });
+    }
+    // The SDK checks Claude's answer against the schema; log when it doesn't match.
+    if (error instanceof Anthropic.AnthropicError) {
+      console.warn("Claude's answer didn't match the schema.", error.message);
+      return Response.json({ error: "Claude's answer didn't match the expected format." }, { status: 502 });
     }
     throw error;
   }

@@ -43,7 +43,14 @@ export const RewriteResult = z.object({
 export type RewriteResult = z.infer<typeof RewriteResult>;
 
 // Token counts for one request, used by the test runner to estimate cost.
-export type Usage = { input: number; cacheRead: number; cacheWrite: number; output: number };
+export type Usage = {
+  input: number;
+  cacheRead: number;
+  cacheWrite: number;
+  output: number;
+  model: string; // which model answered; differs from Opus 5.5 when a fallback ran
+  retried: boolean; // true when the first answer had a rewrite with no rules
+};
 
 // What the API route sends back to the page: Claude's result plus the original parts.
 export type RewriteResponse = RewriteResult & { original: Part[]; usage?: Usage };
