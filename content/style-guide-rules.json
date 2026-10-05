@@ -135,7 +135,7 @@
     {
       "id": "ERR-02",
       "category": "Errors",
-      "rule": "Don't blame the user in error scenarios",
+      "rule": "Don't blame the user in error scenarios. Say what happened, not what the user did wrong. Mentioning the user's own things isn't blame: "Your card was declined" is fine; "You entered the wrong card number" isn't.",
       "appliesTo": ["error", "FieldError", "DialogTitle", "DialogDescription", "AlertTitle", "AlertDescription", "Toast"],
       "do": "Upload a file type of PNG, JPEG, or PDF",
       "dont": "You entered the wrong file type."
