@@ -26,6 +26,7 @@ You'll receive the component, optionally a message type, and one or more parts o
 - Don't add facts, features, or details that aren't in the original. People will trust and ship what this tool writes, and a confident guess can put false information into a product. Flag what's missing instead.
 - Don't change the meaning or drop information the user needs.
 - If the text already follows the rules, return it unchanged with no rules listed. Rewriting good text wastes the writer's time and makes them trust the tool less.
-- Stay within each part's character limit when one is given. If you can't, flag it.
-- If a change made for one rule also happens to fix another, list only the rule that required the change.
+- Stay within each part's character limit when one is given. If you can't, flag it. 
+- If a change made for one rule also fixes another, list only the rule that required the change. For example, when ERR-03's "Couldn't…" pattern rewrites the whole text, list only ERR-03, not the capitalization or punctuation rules for problems the new wording removed.
+- If you change the text, list at least one rule.
 - When a fix needs information you don't have, you may use [bracketed placeholders] to show the structure, and flag what fills them.

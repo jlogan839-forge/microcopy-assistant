@@ -35,7 +35,9 @@ export async function POST(request: Request) {
       output_config: { effort: "medium", format: betaZodOutputFormat(RewriteResult) },
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      system,
+      // The prompt and rules are the same on every request, so cache them:
+      // repeat requests read them from the cache at a fraction of the price.
+      system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: userMessage }],
     });
 
@@ -48,6 +50,12 @@ export async function POST(request: Request) {
     const result: RewriteResponse = {
       original: parts.map(({ name, text }) => ({ name, text })),
       ...response.parsed_output,
+      usage: {
+        input: response.usage.input_tokens,
+        cacheRead: response.usage.cache_read_input_tokens ?? 0,
+        cacheWrite: response.usage.cache_creation_input_tokens ?? 0,
+        output: response.usage.output_tokens,
+      },
     };
     return Response.json(result);
   } catch (error) {

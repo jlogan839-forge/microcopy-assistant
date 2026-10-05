@@ -155,3 +155,62 @@ Short entries: what you chose, what else you considered, why. This becomes the c
 - Unique screen-reader names for "Max characters" ("Max characters for Label").
 - Copy copies all parts, one per line.
 
+
+## 2026-10-05 —  Test runner design (Phase 6)
+- `web/scripts/run-tests.mts` sends every test row to the running app, the same path the browser uses.
+- Multi-part rows use " | " between parts in one cell (T19, T20), in the order the form shows them. Kept one row per test instead of extra columns.
+- Checked automatically: rules cited, unchanged rows left alone, a flag raised when expected, Alert suggested when TOASTS-02 applies.
+- Judged by me: a report shows my ideal rewrite next to Claude's for every row.
+- Each row runs 3 times, because the same input can give different answers. A row only counts as passing if it passes every run.
+- Options for cheaper runs while tuning: `--runs 1` and `--only T01,T19`.
+
+## 2026-10-05 —  Prompt caching to reduce cost
+- The prompt and rules (about 4,500 tokens) are identical on every request, so the API caches them.
+- Repeat requests read them from the cache at a fraction of the price: about 1¢ per request instead of 2.6¢.
+- A full 3-run pass (90 requests) costs about $0.90. This also lowers the cost of every rewrite in the app.
+
+## 2026-10-05 —  First test run: 22 of 30
+- Six failures were tests written before later decisions (cite only the required rule; placeholders).
+- Updated T07, T10, T16, T19, T30, and T31 to match those decisions.
+- Why: the test set records decisions, so when a decision changes, the tests have to change with it.
+
+## 2026-10-05 —  URL isn't jargon
+- T15 expected "URL" to become "web address" (TONE-02). Claude kept "URL" in all 3 runs.
+- I agree that URL is familiar to our users, so T15 became an "already correct" row.
+- Why: when Claude consistently disagrees with a test, check whether the test is wrong before changing the rule.
+
+## 2026-10-05 —  DESCRIPTIONS-01 covers Dialog and Card descriptions
+- Claude flagged twice in T14 that no rule covered punctuation for DialogDescription.
+- Added DialogDescription and CardDescription to DESCRIPTIONS-01.
+
+## 2026-10-05 —  Concrete example for ambiguous rule citations
+- T30 cited only ERR-03 in one run and ERR-03, CAPS-01, and PUNCTUATION-01 in the next: consistent within a run, but flipped between runs.
+- Cause: the guideline didn't say which rule "required" a complete rewrite.
+- Added an example: when ERR-03's "Couldn't…" pattern rewrites the whole text, list only ERR-03.
+
+## 2026-10-05 —  Keep the principle, add the example under it
+- My first edit replaced the general guideline ("list only the rule that required the change") with the ERR-03 example.
+- The next run regressed: T17 cited an extra rule, and T02 rewrote text with no rules at all.
+- Fixed by restoring the principle with the example under it, plus "If you change the text, list at least one rule."
+- Why: replacing a general rule with a specific example made Claude handle only that example's case. The tests caught it the same day.
+
+## 2026-10-05 —  Formatting rules can be cited or not after a rewrite
+- T08 and T09 were the same situation (a full rewrite that also dropped a period), but Claude cited PUNCTUATION-01 in one and not the other.
+- The rewrites were correct either way; only the citation varied.
+- The runner now tolerates CAPS-01 and PUNCTUATION-01 being cited or not when another rule also changed the text. When they're the only expected rules, they must still match exactly.
+- Why: failing correct rewrites over an unclear, low-stakes citation would make the test less useful, not more.
+
+## 2026-10-05 —  Optional rules in the test set ("?")
+- T17: "Changes saved to server" is only 4 words, so TOASTS-01 didn't require removing "server". One run cited TONE-02 for it; the next three didn't.
+- Both readings are defensible: removing "server" is shortening or plain language.
+- A rule ending in "?" in `expected_rules` (T17: `TOASTS-01, TONE-02?`) now passes whether or not Claude cites it.
+- Why: marks the specific rows where I've accepted ambiguity, instead of loosening every test.
+
+## 2026-10-05 —  Open issue: a rewrite with no rules
+- T10 run 1 rewrote the text but cited no rules, even with "list at least one rule" in the prompt (1 of 3 runs).
+- A prompt makes this less likely but can't guarantee it.
+- Options: return no rewrites when nothing changes, so every rewrite must list at least one rule (enforced by the output schema, if structured outputs support it), or retry once in the API route when it happens.
+
+## 2026-10-05 —  Phase 6 result so far
+- First full 3-run pass after tuning: 28 of 30 rows pass every run (up from 22), about $0.91.
+- Every failure so far has been one of four kinds: an outdated test, an ambiguous prompt, a genuinely ambiguous rule, or a guarantee that needs code instead of a prompt.

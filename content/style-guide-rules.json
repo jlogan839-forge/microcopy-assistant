@@ -72,7 +72,7 @@
       "id": "DESCRIPTIONS-01",
       "category": "Secondary Descriptions",
       "rule": "Use sentences for all secondary text with punctuation.",
-      "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
+      "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription", "DialogDescription", "CardDescription"],
       "do": "Enter 8 or more characters. Include a number.",
       "dont": "Enter 8 or more characters include a number"
     },
@@ -81,7 +81,7 @@
       "id": "DESCRIPTIONS-02",
       "category": "Secondary Descriptions",
       "rule": "Add supplemental information only when it's important to reassure the user about sensitive information or what's going to happen next. If the original doesn't include this information, flag that it's missing instead of writing it.",
-      "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription"],
+      "appliesTo": ["FieldDescription", "EmptyDescription", "AlertDescription", "ToastDescription", "FieldError", "PageDescription", "DialogDescription", "CardDescription"],
       "do": "Enter your SSN. Your data won't be stored. /Flag: Consider saying how SSN data is used",
       "dont": "Enter your SSN your data won't be stored"
     },
