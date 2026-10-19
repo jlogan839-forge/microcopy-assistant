@@ -16,7 +16,7 @@ export default async function Home() {
     <main className="mx-auto w-full max-w-3xl px-4 py-10">
       <h1 className="text-2xl font-semibold">Microcopy assistant</h1>
       <p className="mt-1 text-muted-foreground">
-        Paste UI text to check it against the style guide.
+        Select a component type and enter its UI text. The assistant checks it against the style guide using shadcn/ui component names.
       </p>
       <RewriteForm
         components={components}
