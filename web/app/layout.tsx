@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "Microcopy assistant",
-    description: "Rewrites SaaS UI text against a content style guide.",
+    description: "Rewrites UI text against a content style guide, cites the rule behind every change, and uses shadcn/ui component names.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
